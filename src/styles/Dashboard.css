@@ -1,0 +1,559 @@
+/* ==============================
+   Reset & Base
+============================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+        /* slightly larger base size */
+    font-weight: 600;
+        /* default boldness */
+    color: var(--color-text);
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+/* ==============================
+   Variables (Blue & Black Modern Theme)
+============================== */
+:root {
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+
+    --color-bg: #0f111a;
+    /* Dark background */
+    --color-text: #e5e7eb;
+    /* Light text */
+    --color-primary: #3b82f6;
+    /* Bright blue */
+    --color-secondary: #1e40af;
+    /* Dark blue */
+    --color-white: #ffffff;
+    --color-border: #1f2937;
+    --color-muted: #9ca3af;
+
+    --color-pending-bg: #1e293b;
+    --color-success-bg: #064e3b;
+    --color-fail-bg: #7f1d1d;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, .4);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, .5);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, .6);
+}
+
+/* ==============================
+   Layout
+============================== */
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+}
+
+.header {
+    padding: 1rem 1.5rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-white);
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    box-shadow: var(--shadow-md);
+}
+
+.main-content {
+    flex: 1;
+    padding: 1.5rem;
+}
+
+.footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    padding: 1rem;
+}
+
+/* ==============================
+   Tabs
+============================== */
+.tabs-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tab {
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-border);
+    background: #1f2937;
+    color: var(--color-text);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all .2s ease;
+}
+
+.tab:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.tab.active {
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    color: var(--color-white);
+}
+
+.tab-count {
+    margin-left: 0.4rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, .2);
+    color: var(--color-white);
+}
+
+/* ==============================
+   Buttons
+============================== */
+button {
+    border: none;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+button:active:not(:disabled) {
+    transform: scale(.97);
+}
+
+.btn.primary {
+    padding: 0.5rem 1.2rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    color: var(--color-white);
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn.primary:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* ==============================
+   Table
+============================== */
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #1f2937;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    color: var(--color-text);
+}
+
+.table thead th {
+    padding: 0.75rem;
+    background: #111827;
+    font-size: 0.85rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-white);
+}
+
+.table tbody td {
+    padding: 0.65rem;
+    font-size: 0.8rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.table tbody tr:nth-child(even) {
+    background: #1a202c;
+}
+
+.table tbody tr:hover {
+    background: #111827;
+}
+
+.center {
+    text-align: center;
+    padding: 1.5rem;
+    font-weight: 600;
+}
+
+/* ==============================
+   Row Status
+============================== */
+tr.row-pending {
+    background: var(--color-pending-bg);
+}
+
+tr.row-success {
+    background: var(--color-success-bg);
+}
+
+tr.row-fail {
+    background: var(--color-fail-bg);
+}
+
+/* ==============================
+   Status Badge
+============================== */
+.status-badge {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 999px;
+    text-transform: capitalize;
+    color: var(--color-white);
+}
+
+.status-badge.pending {
+    background: #2563eb;
+    /* blue */
+}
+
+.status-badge.successful {
+    background: #10b981;
+    /* green */
+}
+
+.status-badge.unsuccessful {
+    background: #ef4444;
+    /* red */
+}
+
+/* ==============================
+   Assign Controls
+============================== */
+td select {
+    width: 100%;
+    margin-bottom: 0.25rem;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid #374151;
+    background: #111827;
+    color: var(--color-white);
+}
+
+td select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+/* ==============================
+   Action Buttons
+============================== */
+.action-col {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+
+.action-col button {
+    background: transparent;
+    font-size: 1rem;
+    color: var(--color-white);
+}
+
+.action-col button:hover:not(:disabled) {
+    transform: scale(1.2);
+}
+
+.success-btn {
+    color: #10b981;
+}
+
+.fail-btn {
+    color: #ef4444;
+}
+
+.delete-btn {
+    color: #6b7280;
+}
+
+.send-txt-btn {
+    color: var(--color-primary);
+}
+
+.send-driver-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+    border-radius: 0.375rem;
+    background: var(--color-primary);
+    color: white;
+}
+
+.send-driver-btn:hover {
+    background: #1e40af;
+}
+
+/* ==============================
+   Pagination
+============================== */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.pagination-container button {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid #374151;
+    background: #1f2937;
+    color: var(--color-white);
+}
+
+.pagination-container .active-page {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+/* ==============================
+   Modals
+============================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-card {
+    background: #1f2937;
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    width: 720px;
+    max-width: 100%;
+    box-shadow: var(--shadow-lg);
+    color: var(--color-white);
+}
+
+.modal-card.large {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-card h3 {
+    margin-top: 0;
+    color: var(--color-white);
+}
+
+.modal-card textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    border: 1px solid #374151;
+    background: #111827;
+    color: var(--color-white);
+}
+
+/* ==============================
+   Form Grid
+============================== */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.form-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    color: var(--color-white);
+}
+
+.form-grid .full {
+    grid-column: 1 / -1;
+}
+
+.form-grid input,
+.form-grid textarea,
+.form-grid select {
+    padding: 0.45rem;
+    border-radius: 0.5rem;
+    border: 1px solid #374151;
+    background: #111827;
+    color: var(--color-white);
+}
+
+/* ==============================
+   Spinner
+============================== */
+.global-spinner-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 0.35rem solid #374151;
+    border-top: 0.35rem solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==============================
+   Responsive
+============================== */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-col {
+        flex-direction: column;
+    }
+
+    .table {
+        font-size: 0.7rem;
+    }
+}
+
+/* ==============================
+   Base Font Enhancements
+============================== */
+body,
+html {
+    font-size: 16px;
+    /* slightly larger base size */
+    font-weight: 600;
+    /* default boldness */
+    color: var(--color-text);
+}
+
+/* Buttons */
+button,
+.btn.primary,
+.send-driver-btn {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+/* Tabs */
+.tab {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.tab.active {
+    font-weight: 800;
+}
+
+/* Table */
+.table thead th {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-white);
+}
+
+.table tbody td {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* Status badges */
+.status-badge {
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+/* Forms & Inputs */
+.form-grid label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--color-white);
+}
+
+.form-grid input,
+.form-grid textarea,
+.form-grid select {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--color-white);
+}
+
+/* Action buttons inside tables */
+.action-col button {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Modals */
+.modal-card h3 {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* Pagination */
+.pagination-container button {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.pagination-container .active-page {
+    font-weight: 700;
+}
+
+/* Spinner (optional bold effect via thickness) */
+.spinner {
+    border: 0.4rem solid #374151;
+    border-top: 0.4rem solid var(--color-primary);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .table {
+        font-size: 0.8rem;
+    }
+
+    button,
+    .btn.primary,
+    .send-driver-btn {
+        font-size: 0.9rem;
+    }
+}
