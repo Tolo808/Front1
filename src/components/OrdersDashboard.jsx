@@ -143,64 +143,44 @@ const handleMarkSuccessful = async (order) => {
   if (!order._id) return;
 
   try {
-    // Optimistic UI update
-    setOrders((prev) =>
-      prev.map((o) =>
-        o._id === order._id ? { ...o, status: "successful" } : o
-      )
-    );
-
     const res = await fetch(`${BACKEND_URL}/api/update_delivery_status/${order._id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "successful" }),
     });
+
     const data = await res.json();
 
-    if (!data.success) throw new Error(data.message || "Failed to update status");
+    // Change this line: Check if the request was successful via HTTP status
+    if (!res.ok) throw new Error(data.error || "Failed to update status");
 
-    // Ensure backend state sync
-    setOrders((prev) =>
-      prev.map((o) => (o._id === order._id ? data.order : o))
-    );
+    // Socket.io will handle the state update automatically via 'order_updated'
   } catch (err) {
     console.error("Mark successful error:", err);
-    // Revert UI change
-    setOrders((prev) => [...prev]);
     alert(err.message);
   }
 };
-
 // Mark order as unsuccessful
 const handleMarkUnsuccessful = async (order, reason = "") => {
   if (!order._id) return;
 
   try {
-    setOrders((prev) =>
-      prev.map((o) =>
-        o._id === order._id ? { ...o, status: "unsuccessful" } : o
-      )
-    );
-
     const res = await fetch(`${BACKEND_URL}/api/update_delivery_status/${order._id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "unsuccessful", reason }),
     });
+
     const data = await res.json();
 
-    if (!data.success) throw new Error(data.message || "Failed to update status");
+    // Change this line: Check if the request was successful via HTTP status
+    if (!res.ok) throw new Error(data.error || "Failed to update status");
 
-    setOrders((prev) =>
-      prev.map((o) => (o._id === order._id ? data.order : o))
-    );
   } catch (err) {
     console.error("Mark unsuccessful error:", err);
-    setOrders((prev) => [...prev]);
     alert(err.message);
   }
 };
-
 
   const handleDelete = async (orderId) => {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
