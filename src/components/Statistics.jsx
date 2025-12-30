@@ -4,7 +4,7 @@ import { Bar, Pie } from "react-chartjs-2";
 import "chart.js/auto";
 import "../styles/Statistics.css";
 
-const BACKEND_URL = "https://backend-production-4394.up.railway.app/"
+const BACKEND_URL = "https://backend-production-4394.up.railway.app"
 
 export default function Statistics() {
   const [activeTab, setActiveTab] = useState("daily");
