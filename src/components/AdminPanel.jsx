@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/AdminPanel.css";
 
-const API_URL = "http://localhost:5001/api/drivers";
+const API_URL = "https://backend-production-4394.up.railway.app/api/drivers";
 
 export default function AdminPanel() {
   const [drivers, setDrivers] = useState([]);
