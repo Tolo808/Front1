@@ -104,7 +104,7 @@ export default function Statistics() {
         <div className={`stat-card performance ${loading ? "skeleton" : ""}`}>
           {!loading && stats ? (
             <>
-              <label>Fulfillment Success ({timeRange}D)</label>
+              <label>Success Rate({timeRange}D)</label>
               <h2>{Math.round(successRate)}%</h2>
               <div className="progress-bar-container"><div className="progress-bar-fill" style={{ width: `${successRate}%` }}></div></div>
             </>
