@@ -468,13 +468,13 @@ const handleNotifyDriver = async (deliveryId, driverId) => {
                     <td>{o.item_description || "-"}</td>
                     <td>{o.status || "pending"}</td>
                     {/* --- REASON COLUMN --- */}
-                    <td className="reason-cell">
+                    <td className="reason-col">
                       {o.status?.toLowerCase() === "unsuccessful" ? (
-                        <span className="reason-text" title={o.reason}>
-                          {o.reason || "No reason provided"}
+                        <span style={{ color: "#d9534f", fontSize: "0.85rem", fontWeight: "bold" }}>
+                          {o.unsuccess_reason || "No reason given"}
                         </span>
                       ) : (
-                        <span className="muted">-</span>
+                        <span style={{ color: "#ccc" }}>-</span>
                       )}
                     </td>
                     <td>{o.payment_from_sender_or_receiver || "-"}</td>
