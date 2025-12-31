@@ -701,5 +701,29 @@ button,
         transform: rotate(360deg);
     }
 }
+.reason-cell {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+}
 
+.reason-text {
+  color: #d9534f; /* Reddish color for failed reasons */
+  font-style: italic;
+}
+
+.muted {
+  color: #ccc;
+}
+
+/* Optional: Show full reason on hover */
+.reason-cell:hover {
+  white-space: normal;
+  overflow: visible;
+  position: relative;
+  background: #fff;
+  z-index: 10;
+}
 
