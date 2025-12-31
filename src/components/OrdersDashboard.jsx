@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import socket from "../socket";
 import "../styles/Dashboard.css";
 
-const BACKEND_URL = "https://backend-production-4394.up.railway.app/"; 
+const BACKEND_URL = "https://backend-production-4394.up.railway.app"; 
 const DRIVER_API = "http://localhost:6000";    // realtime driver delivery
 
 const TABS = ["Pending", "Successful", "Unsuccessful"];
