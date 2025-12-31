@@ -64,7 +64,7 @@ export default function AdminPanel() {
         <h2>Admin Management</h2>
         <div className="nav-btns">
           <button className="add-main-btn" onClick={() => openModal()}>+ Add Driver</button>
-          <button onClick={() => window.location.href = "/admin-choice"}>Back to Hub</button>
+          <button onClick={() => window.location.href = "/admin-choice"}>Back</button>
         </div>
       </nav>
 
