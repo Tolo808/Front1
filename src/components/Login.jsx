@@ -16,13 +16,22 @@ export default function Login() {
     setCredentials((prev) => ({ ...prev, [name]: value }));
   };
 
-  // inside handleLogin function in Login.jsx
+
 const handleLogin = (e) => {
   e.preventDefault();
-  if (credentials.role === "admin") {
-    navigate("/admin-choice"); // Changed from /statistics
-  } else {
+  const { username, password, role } = credentials;
+
+  // Validation for Admin
+  if (role === "admin" && username === "admin" && password === "admin123") {
+    navigate("/admin-choice");
+  } 
+  // Validation for Call Center
+  else if (role === "call-center" && username === "call" && password === "call123") {
     navigate("/dashboard");
+  } 
+  // Handle Incorrect Credentials
+  else {
+    alert("Invalid credentials for the selected role. Please try again.");
   }
 };
 
