@@ -1,7 +1,7 @@
 // src/socket.js
 import { io } from "socket.io-client";
 
-const SOCKET_URL = "http://localhost:5001";
+const SOCKET_URL = "https://backend-production-4394.up.railway.app";
 
 const socket = io(SOCKET_URL, {
   autoConnect: true,
