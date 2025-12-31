@@ -12,9 +12,9 @@ body {
     margin: 0;
     padding: 0;
     font-size: 16px;
-        /* slightly larger base size */
+    /* slightly larger base size */
     font-weight: 600;
-        /* default boldness */
+    /* default boldness */
     color: var(--color-text);
 }
 
@@ -28,49 +28,90 @@ textarea {
 /* ==============================
    Variables (Blue & Black Modern Theme)
 ============================== */
+/* ==============================
+    Updated Variables & Reset
+============================== */
 :root {
-    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+    /* Cleaner, highly legible font stack */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
     --color-bg: #0f111a;
-    /* Dark background */
-    --color-text: #e5e7eb;
-    /* Light text */
+    --color-text: #ffffff;
+    /* Forced pure white for visibility */
     --color-primary: #3b82f6;
-    /* Bright blue */
-    --color-secondary: #1e40af;
-    /* Dark blue */
+    --color-secondary: #1d4ed8;
     --color-white: #ffffff;
-    --color-border: #1f2937;
-    --color-muted: #9ca3af;
+    --color-border: #374151;
+    /* Slightly lighter border for better definition */
+    --color-muted: #d1d5db;
+    /* Light gray for secondary info */
 
     --color-pending-bg: #1e293b;
     --color-success-bg: #064e3b;
     --color-fail-bg: #7f1d1d;
-
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, .4);
-    --shadow-md: 0 6px 20px rgba(0, 0, 0, .5);
-    --shadow-lg: 0 12px 40px rgba(0, 0, 0, .6);
 }
 
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    /* Smoother text rendering */
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 500;
+    /* Standard medium weight for clarity */
+}
 /* ==============================
    Layout
 ============================== */
+/* Reset/Page container */
 .page {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--color-bg);
-    color: var(--color-text);
-    font-family: var(--font-sans);
+    min-height: 100vh;
+    background-color: #0f172a;
+    /* Matching your dark theme */
 }
 
+/* The Header Fix */
 .header {
-    padding: 1rem 1.5rem;
-    font-size: 1.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    height: 64px;
+    background-color: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    /* Extra bold for the brand */
+    letter-spacing: -0.02em;
+}
+
+.logout-btn {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border: 1.5px solid #ffffff;
+    padding: 8px 20px;
+    border-radius: 8px;
     font-weight: 700;
-    color: var(--color-white);
-    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-    box-shadow: var(--shadow-md);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+}
+.logout-btn:hover {
+    background-color: #ef4444;
+    /* Turns red on hover */
+    border-color: #ef4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
 }
 
 .main-content {
@@ -173,18 +214,32 @@ button:active:not(:disabled) {
 }
 
 .table thead th {
-    padding: 0.75rem;
+    padding: 1rem 0.75rem;
     background: #111827;
-    font-size: 0.85rem;
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-    color: var(--color-white);
+    font-size: 0.9rem;
+    font-weight: 800;
+    /* Bold headers */
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #ffffff;
+    border-bottom: 2px solid var(--color-border);
 }
 
 .table tbody td {
-    padding: 0.65rem;
-    font-size: 0.8rem;
-    border-bottom: 1px solid var(--color-border);
+    padding: 0.8rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    /* High visibility weight */
+    color: #ffffff;
+    /* Ensure all data is white */
+}
+td select,
+.form-grid input,
+.form-grid select {
+    font-weight: 600;
+    color: #ffffff !important;
+    background: #0f172a;
+    border: 1px solid #4b5563;
 }
 
 .table tbody tr:nth-child(even) {
@@ -341,7 +396,8 @@ td select:focus {
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, .7);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -349,50 +405,48 @@ td select:focus {
 }
 
 .modal-card {
-    background: #1f2937;
-    padding: 1.25rem;
-    border-radius: 0.75rem;
-    width: 720px;
-    max-width: 100%;
-    box-shadow: var(--shadow-lg);
-    color: var(--color-white);
+    background: #1e293b;
+    padding: 2.5rem;
+    border-radius: 1.25rem;
+    width: 1000px;
+    max-width: 95vw;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    border: 1px solid #334155;
 }
 
 .modal-card.large {
-    max-height: 90vh;
+    max-height: 92vh;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4b5563 transparent;
 }
 
 .modal-card h3 {
-    margin-top: 0;
-    color: var(--color-white);
-}
-
-.modal-card textarea {
-    width: 100%;
-    padding: 0.6rem;
-    border-radius: 0.5rem;
-    border: 1px solid #374151;
-    background: #111827;
-    color: var(--color-white);
+    margin: 0 0 2rem 0;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.025em;
 }
 
 /* ==============================
-   Form Grid
+   Form Grid (Optimized for 1000px)
 ============================== */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
+    gap: 1.5rem 2rem;
     margin-top: 1rem;
 }
 
 .form-grid label {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    font-size: 0.8rem;
-    color: var(--color-white);
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
 }
 
 .form-grid .full {
@@ -402,13 +456,67 @@ td select:focus {
 .form-grid input,
 .form-grid textarea,
 .form-grid select {
-    padding: 0.45rem;
-    border-radius: 0.5rem;
-    border: 1px solid #374151;
-    background: #111827;
-    color: var(--color-white);
+    padding: 0.8rem 1rem;
+    border-radius: 0.6rem;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: #ffffff !important;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    width: 100%;
 }
 
+.form-grid input:focus,
+.form-grid select:focus,
+.form-grid textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    background: #111827;
+}
+
+.form-grid textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Modal Footer Actions (Matches Screenshot Buttons) */
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #334155;
+}
+
+.modal-actions .btn {
+    padding: 0.8rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: transform 0.1s;
+}
+
+.modal-actions .btn.primary {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+}
+
+.modal-actions .btn.primary:hover {
+    background: #1d4ed8;
+}
+
+.modal-actions .btn:not(.primary) {
+    background: #1f2937;
+    color: #ffffff;
+    border: 1px solid #374151;
+}
+
+.modal-actions .btn:not(.primary):hover {
+    background: #111827;
+}
 /* ==============================
    Spinner
 ============================== */
@@ -557,30 +665,41 @@ button,
         font-size: 0.9rem;
     }
 }
+
 /* Dashboard.css */
 .global-spinner-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.7); /* semi-transparent white */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999; /* Ensure it's on top of everything */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    /* semi-transparent white */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    /* Ensure it's on top of everything */
 }
 
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #3498db; /* Tolo Blue */
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    /* Tolo Blue */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
+
+

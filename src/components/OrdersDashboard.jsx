@@ -3,8 +3,8 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import socket from "../socket";
 import "../styles/Dashboard.css";
 
-const BACKEND_URL = "http://localhost:5001"; 
-const DRIVER_API = "http://localhost:6000";    // realtime driver delivery
+const BACKEND_URL = "http://localhost:5001";  // Dashboard backend
+const DRIVER_API = "http://192.168.1.2:6000";    // realtime driver delivery
 
 const TABS = ["Pending", "Successful", "Unsuccessful"];
 const ORDERS_PER_PAGE = 10;
@@ -336,28 +336,29 @@ const handleDriverAssign = async (orderId, driverId) => {
 
     const [notifyingIds, setNotifyingIds] = useState([]);
 
-const handleNotifyDriver = (orderId, driverId) => {
-  if (!driverId) return alert("Please assign a driver first.");
 
-  setNotifyingIds((prev) => [...prev, orderId]);
+const handleNotifyDriver = async (deliveryId, driverId) => {
+  // Use environment variable if available (Vite style), otherwise fallback to local
+  const API_URL = "https://backend-production-4394.up.railway.app/";
 
-  socket.emit(
-    "notify_driver",
-    { order_id: orderId, driver_id: driverId },
-    (ack) => {
-      setNotifyingIds((prev) => prev.filter((id) => id !== orderId));
+  try {
+    const response = await fetch(`${API_URL}/api/notify_driver_app`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ delivery_id: deliveryId, driver_id: driverId }),
+    });
 
-      if (ack?.success) {
-        alert("Driver notified successfully ✅");
-      } else {
-        console.error("Driver notification failed:", ack);
-        alert("Failed to notify driver");
-      }
+    const data = await response.json();
+    if (data.success) {
+      alert("✅ Notification sent to Python Backend!");
+    } else {
+      alert("⚠️ Server error: " + (data.error || "Unknown error"));
     }
-  );
+  } catch (err) {
+    console.error("❌ Failed to notify app", err);
+    alert("Could not connect to the Dashboard Backend.");
+  }
 };
-
-
 
   // --- Render
   return (
