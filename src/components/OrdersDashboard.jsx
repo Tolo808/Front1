@@ -3,8 +3,8 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import socket from "../socket";
 import "../styles/Dashboard.css";
 
-const BACKEND_URL = "https://backend-production-4394.up.railway.app";  // Dashboard backend
-const DRIVER_API = "http://192.168.1.2:6000";    // realtime driver delivery
+const BACKEND_URL = "https://backend-production-4394.up.railway.app/"; 
+const DRIVER_API = "http://localhost:6000";    // realtime driver delivery
 
 const TABS = ["Pending", "Successful", "Unsuccessful"];
 const ORDERS_PER_PAGE = 10;
@@ -143,44 +143,64 @@ const handleMarkSuccessful = async (order) => {
   if (!order._id) return;
 
   try {
+    // Optimistic UI update
+    setOrders((prev) =>
+      prev.map((o) =>
+        o._id === order._id ? { ...o, status: "successful" } : o
+      )
+    );
+
     const res = await fetch(`${BACKEND_URL}/api/update_delivery_status/${order._id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "successful" }),
     });
-
     const data = await res.json();
 
-    // Change this line: Check if the request was successful via HTTP status
-    if (!res.ok) throw new Error(data.error || "Failed to update status");
+    if (!data.success) throw new Error(data.message || "Failed to update status");
 
-    // Socket.io will handle the state update automatically via 'order_updated'
+    // Ensure backend state sync
+    setOrders((prev) =>
+      prev.map((o) => (o._id === order._id ? data.order : o))
+    );
   } catch (err) {
     console.error("Mark successful error:", err);
+    // Revert UI change
+    setOrders((prev) => [...prev]);
     alert(err.message);
   }
 };
+
 // Mark order as unsuccessful
 const handleMarkUnsuccessful = async (order, reason = "") => {
   if (!order._id) return;
 
   try {
+    setOrders((prev) =>
+      prev.map((o) =>
+        o._id === order._id ? { ...o, status: "unsuccessful" } : o
+      )
+    );
+
     const res = await fetch(`${BACKEND_URL}/api/update_delivery_status/${order._id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "unsuccessful", reason }),
     });
-
     const data = await res.json();
 
-    // Change this line: Check if the request was successful via HTTP status
-    if (!res.ok) throw new Error(data.error || "Failed to update status");
+    if (!data.success) throw new Error(data.message || "Failed to update status");
 
+    setOrders((prev) =>
+      prev.map((o) => (o._id === order._id ? data.order : o))
+    );
   } catch (err) {
     console.error("Mark unsuccessful error:", err);
+    setOrders((prev) => [...prev]);
     alert(err.message);
   }
 };
+
 
   const handleDelete = async (orderId) => {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
@@ -336,29 +356,28 @@ const handleDriverAssign = async (orderId, driverId) => {
 
     const [notifyingIds, setNotifyingIds] = useState([]);
 
+const handleNotifyDriver = (orderId, driverId) => {
+  if (!driverId) return alert("Please assign a driver first.");
 
-const handleNotifyDriver = async (deliveryId, driverId) => {
-  // Use environment variable if available (Vite style), otherwise fallback to local
-  const API_URL = "https://backend-production-4394.up.railway.app/";
+  setNotifyingIds((prev) => [...prev, orderId]);
 
-  try {
-    const response = await fetch(`${API_URL}/api/notify_driver_app`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ delivery_id: deliveryId, driver_id: driverId }),
-    });
+  socket.emit(
+    "notify_driver",
+    { order_id: orderId, driver_id: driverId },
+    (ack) => {
+      setNotifyingIds((prev) => prev.filter((id) => id !== orderId));
 
-    const data = await response.json();
-    if (data.success) {
-      alert("✅ Notification sent to Python Backend!");
-    } else {
-      alert("⚠️ Server error: " + (data.error || "Unknown error"));
+      if (ack?.success) {
+        alert("Driver notified successfully ✅");
+      } else {
+        console.error("Driver notification failed:", ack);
+        alert("Failed to notify driver");
+      }
     }
-  } catch (err) {
-    console.error("❌ Failed to notify app", err);
-    alert("Could not connect to the Dashboard Backend.");
-  }
+  );
 };
+
+
 
   // --- Render
   return (
