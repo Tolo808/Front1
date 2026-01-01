@@ -1,4 +1,3 @@
-// src/components/Dashboard.jsx
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import socket from "../socket";
 import "../styles/Dashboard.css";
