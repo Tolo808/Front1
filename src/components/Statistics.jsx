@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Bar, Pie } from "react-chartjs-2";
 import "chart.js/auto";
 import "../styles/Statistics.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { differenceInDays } from "date-fns";
+
+
 
 const BACKEND_URL = "https://backend-production-4394.up.railway.app"
 
@@ -17,19 +22,32 @@ export default function Statistics() {
 
   const getRangeLabel = () => (timeRange === "365" ? "All Time" : `Last ${timeRange} Days`);
 
-  useEffect(() => {
-    setLoading(true);
-    fetch(`${BACKEND_URL}/api/analytics/detailed?days=${timeRange}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setStats(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, [timeRange]);
+
+  
+const [startDate, setStartDate] = useState(new Date());
+const [endDate, setEndDate] = useState(new Date());
+const [isCustom, setIsCustom] = useState(false);
+
+
+
+useEffect(() => {
+  let days = timeRange;
+  if (isCustom && startDate && endDate) {
+    days = Math.max(1, differenceInDays(endDate, startDate));
+  }
+
+  setLoading(true);
+  fetch(`${BACKEND_URL}/api/analytics/detailed?days=${days}`)
+    .then((res) => res.json())
+    .then((data) => {
+      setStats(data);
+      setLoading(false);
+    })
+    .catch((err) => {
+      setError(err.message);
+      setLoading(false);
+    });
+}, [timeRange, startDate, endDate, isCustom]);
 
   const handleExport = (type) => {
   const endpointMap = {
@@ -74,13 +92,68 @@ export default function Statistics() {
           <h1>📊 Tolo Analytics</h1>
           <p className={loading ? "skeleton-text" : ""}>{loading ? "" : `${getRangeLabel()}`}</p>
         </div>
-        <div className="range-picker-container">
-          <label>Range:</label>
-          <div className="range-buttons">
-            {[{ label: "7Days", value: "7" }, { label: "30Days", value: "30" }, { label: "90Days", value: "90" }, { label: "ALL", value: "365" }].map((range) => (
-              <button key={range.value} className={`range-btn ${timeRange === range.value ? "active" : ""}`} onClick={() => setTimeRange(range.value)}>{range.label}</button>
+       <div className="range-picker-wrapper">
+          <div className="segmented-control">
+            <div 
+              className="selection-indicator" 
+              style={{ 
+                width: '20%', 
+                transform: `translateX(${
+                  timeRange === "7" ? "0%" : 
+                  timeRange === "30" ? "100%" : 
+                  timeRange === "90" ? "200%" : 
+                  timeRange === "365" ? "300%" : "400%"
+                })` 
+              }}
+            />
+            {[
+              { label: "7D", value: "7" },
+              { label: "30D", value: "30" },
+              { label: "90D", value: "90" },
+              { label: "All", value: "365" },
+              { label: "Custom", value: "custom" }
+            ].map((range) => (
+              <button
+                key={range.value}
+                className={`range-segment ${timeRange === range.value ? "active" : ""}`}
+                onClick={() => {
+                  setTimeRange(range.value);
+                  setIsCustom(range.value === "custom");
+                }}
+              >
+                {range.label}
+              </button>
             ))}
           </div>
+        
+          {/* Conditional Date Picker Row */}
+          {isCustom && (
+            <div className="custom-date-row">
+              <div className="date-input-group">
+                <label>From:</label>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  className="dark-datepicker"
+                />
+              </div>
+              <div className="date-input-group">
+                <label>To:</label>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={startDate}
+                  className="dark-datepicker"
+                />
+              </div>
+            </div>
+          )}
         </div>
         <div className="nav-actions">
           <button className="export-master-btn" onClick={() => handleExport('analytics-report')}>📄 {loading ? "..." : `Export Master Report`}</button>
