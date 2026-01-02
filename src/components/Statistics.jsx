@@ -77,7 +77,7 @@ export default function Statistics() {
         <div className="range-picker-container">
           <label>Range:</label>
           <div className="range-buttons">
-            {[{ label: "7D", value: "7" }, { label: "30D", value: "30" }, { label: "90D", value: "90" }, { label: "ALL", value: "365" }].map((range) => (
+            {[{ label: "7Days", value: "7" }, { label: "30Days", value: "30" }, { label: "90Days", value: "90" }, { label: "ALL", value: "365" }].map((range) => (
               <button key={range.value} className={`range-btn ${timeRange === range.value ? "active" : ""}`} onClick={() => setTimeRange(range.value)}>{range.label}</button>
             ))}
           </div>
