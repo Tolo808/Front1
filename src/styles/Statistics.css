@@ -323,3 +323,59 @@
     color: white;
     border-color: var(--color-primary);
 }
+.custom-date-row {
+  display: flex;
+  gap: 15px;
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.date-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
+.dark-datepicker {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  outline: none;
+  width: 120px;
+}
+
+/* Customizing the Calendar Popup */
+.react-datepicker {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+  font-family: 'Inter', sans-serif;
+}
+
+.react-datepicker__header {
+  background-color: #111827;
+  border-bottom: 1px solid #374151;
+}
+
+.react-datepicker__day, .react-datepicker__day-name, .react-datepicker__current-month {
+  color: white;
+}
+
+.react-datepicker__day:hover {
+  background-color: #3b82f6;
+}
+
+.react-datepicker__day--selected, .react-datepicker__day--in-range {
+  background-color: #3b82f6;
+}
