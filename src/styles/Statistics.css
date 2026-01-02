@@ -459,7 +459,7 @@
 /* Individual segment buttons */
 .range-segment {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   background: none;
   border: none;
   color: #9ca3af;
