@@ -338,10 +338,10 @@ const handleDriverAssign = async (orderId, driverId) => {
 
 const handleNotifyDriver = async (deliveryId, driverId) => {
   // Use environment variable if available (Vite style), otherwise fallback to local
-  const API_URL = "https://backend-production-4394.up.railway.app/";
+  const API_URL = "https://backend-production-4394.up.railway.app";
 
   try {
-    const response = await fetch(`${API_URL}/api/notify_driver_app`, {
+    const response = await fetch(`${API_URL}/api/internal/notify_driver`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ delivery_id: deliveryId, driver_id: driverId }),
