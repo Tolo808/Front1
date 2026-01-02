@@ -3,7 +3,7 @@ import socket from "../socket";
 import "../styles/Dashboard.css";
 
 const BACKEND_URL = "https://backend-production-4394.up.railway.app"; 
-const DRIVER_API = "http://192.168.1.2:6000";    // realtime driver delivery
+const DRIVER_API = "http://192.168.1.5:6000";    // realtime driver delivery
 
 const TABS = ["Pending", "Successful", "Unsuccessful"];
 const ORDERS_PER_PAGE = 10;
