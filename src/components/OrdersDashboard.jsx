@@ -338,7 +338,7 @@ const handleDriverAssign = async (orderId, driverId) => {
 
 const handleNotifyDriver = async (deliveryId, driverId) => {
   // 1. Remove the trailing slash from the base URL
-  const API_URL = "http://192.168.1.5:6000";
+  const API_URL = "https://backend-production-4394.up.railway.app";
 
   try {
     // 2. Use the correct endpoint: /api/internal/notify_driver
