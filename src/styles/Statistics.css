@@ -433,3 +433,48 @@
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* The container for the 7D, 30D, etc. buttons */
+.segmented-control {
+  display: flex;
+  position: relative;
+  background: rgba(17, 24, 39, 0.8); /* Darker contrast */
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  width: fit-content;
+  backdrop-filter: blur(8px);
+}
+
+/* The blue sliding indicator */
+.selection-indicator {
+  position: absolute;
+  height: calc(100% - 8px);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  z-index: 1;
+}
+
+/* Individual segment buttons */
+.range-segment {
+  position: relative;
+  z-index: 2;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  min-width: 60px;
+}
+
+.range-segment.active {
+  color: white;
+}
+
+.range-segment:hover:not(.active) {
+  color: #e5e7eb;
+}
