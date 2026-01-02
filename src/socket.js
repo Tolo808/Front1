@@ -1,4 +1,3 @@
-// src/socket.js
 import { io } from "socket.io-client";
 
 const SOCKET_URL = "https://backend-production-4394.up.railway.app";
@@ -9,7 +8,7 @@ const socket = io(SOCKET_URL, {
   reconnectionDelay: 1000,
 });
 
-/* -------------------- Connection logs -------------------- */
+/*Connection logs*/
 socket.on("connect", () =>
   console.log("✅ Connected to Socket.IO server:", socket.id)
 );
@@ -24,12 +23,8 @@ socket.on("connect_error", (err) =>
 
 export default socket;
 
-/* -------------------- Order updates -------------------- */
+/*Order updates*/
 
-/**
- * Update an order (price, delivery_type, driver, status, etc.)
- * Backend must listen to: socket.on("update_order")
- */
 export function updateOrder(order_id, updates) {
   return new Promise((resolve, reject) => {
     socket.emit("update_order", { order_id, updates }, (ack) => {
@@ -39,10 +34,7 @@ export function updateOrder(order_id, updates) {
   });
 }
 
-/**
- * Mark order successful
- * Backend must listen to: socket.on("mark_successful")
- */
+/* Mark order successful */
 export function markSuccessful(order_id) {
   return new Promise((resolve, reject) => {
     socket.emit("mark_successful", { order_id }, (ack) => {
@@ -52,10 +44,7 @@ export function markSuccessful(order_id) {
   });
 }
 
-/**
- * Mark order unsuccessful
- * Backend must listen to: socket.on("mark_unsuccessful")
- */
+/* Mark order unsuccessful*/
 export function markUnsuccessful(order_id, reason = "") {
   return new Promise((resolve, reject) => {
     socket.emit("mark_unsuccessful", { order_id, reason }, (ack) => {
@@ -65,14 +54,9 @@ export function markUnsuccessful(order_id, reason = "") {
   });
 }
 
-/* -------------------- Subscriptions -------------------- */
 
-/**
- * Subscribe to server events like:
- * - order_created
- * - order_updated
- * - order_deleted
- */
+
+
 export function subscribe(event, callback) {
   socket.on(event, callback);
   return () => socket.off(event, callback);
