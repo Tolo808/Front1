@@ -337,25 +337,39 @@ const handleDriverAssign = async (orderId, driverId) => {
 
 
 const handleNotifyDriver = async (deliveryId, driverId) => {
-  // Use environment variable if available (Vite style), otherwise fallback to local
+  // 1. Remove the trailing slash from the base URL
   const API_URL = "https://backend-production-4394.up.railway.app";
 
   try {
+    // 2. Use the correct endpoint: /api/internal/notify_driver
     const response = await fetch(`${API_URL}/api/internal/notify_driver`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ delivery_id: deliveryId, driver_id: driverId }),
+      body: JSON.stringify({ 
+        delivery_id: deliveryId, 
+        driver_id: driverId 
+      }),
     });
 
+    // 3. Check if response is actually JSON before parsing
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await response.text();
+      console.error("Expected JSON but got:", text);
+      throw new Error("Server did not return JSON. Check if the URL is correct.");
+    }
+
     const data = await response.json();
+    
     if (data.success) {
       alert("✅ Notification sent to Python Backend!");
     } else {
-      alert("⚠️ Server error: " + (data.error || "Unknown error"));
+      // Use data.message because that's what your Flask app sends
+      alert("⚠️ Server error: " + (data.message || "Unknown error"));
     }
   } catch (err) {
     console.error("❌ Failed to notify app", err);
-    alert("Could not connect to the Dashboard Backend.");
+    alert("Error: " + err.message);
   }
 };
 
