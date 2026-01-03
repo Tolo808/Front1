@@ -674,45 +674,63 @@ const handleNotifyDriver = async (deliveryId, driverId) => {
           <div className="modal-card large" onMouseDown={(e) => e.stopPropagation()}>
             <h3>Add Delivery</h3>
             <div className="form-grid">
-              {/* Form Fields */}
-              {Object.entries(newDelivery).map(([field, value]) => (
-                <label key={field} className={field === "full_address" || field === "item_description" ? "full" : ""}>
-                  {field.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-                  {field === "source" || field === "payment_from_sender_or_receiver" || field === "delivery_type" ? (
-                    <select value={value} onChange={(e) => handleNewDeliveryChange(field, e.target.value)}>
-                      {field === "source" && (
-                        <>
-                          <option value="web">web</option>
-                          <option value="bot">bot</option>
-                          <option value="unknown">unknown</option>
-                        </>
-                      )}
-                      {field === "payment_from_sender_or_receiver" && (
-                        <>
-                          <option value="sender">sender</option>
-                          <option value="receiver">receiver</option>
-                        </>
-                      )}
-                      {field === "delivery_type" && (
-                        <>
-                          <option value="Payable">Payable</option>
-                          <option value="Free">Free</option>
-                        </>
-                      )}
-                    </select>
-                  ) : field === "item_description" || field === "full_address" ? (
-                    <textarea value={value} onChange={(e) => handleNewDeliveryChange(field, e.target.value)} />
-                  ) : (
-                    <input
-                      type={field === "quantity" ? "number" : "text"}
-                      min={field === "quantity" ? 1 : undefined}
-                      value={value}
-                      onChange={(e) => handleNewDeliveryChange(field, e.target.value)}
-                    />
-                  )}
-                </label>
-              ))}
-            </div>
+             {/* Replace the existing map inside the Add Delivery Modal with this */}
+              {Object.entries(newDelivery).map(([field, value]) => {
+                // Define autocomplete hints based on the field name
+                const getAutocomplete = (f) => {
+                  if (f === "sender_phone" || f === "receiver_phone") return "tel";
+                  if (f === "pickup" || f === "dropoff" || f === "full_address") return "street-address";
+                  if (f === "username") return "username";
+                  return "on";
+                };
+              
+                return (
+                  <label key={field} className={field === "full_address" || field === "item_description" ? "full" : ""}>
+                    {field.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                    
+                    {field === "source" || field === "payment_from_sender_or_receiver" || field === "delivery_type" ? (
+                      <select value={value} onChange={(e) => handleNewDeliveryChange(field, e.target.value)}>
+                        {/* ... your existing options ... */}
+                        {field === "source" && (
+                          <>
+                            <option value="web">web</option>
+                            <option value="bot">bot</option>
+                            <option value="unknown">unknown</option>
+                          </>
+                        )}
+                        {field === "payment_from_sender_or_receiver" && (
+                          <>
+                            <option value="sender">sender</option>
+                            <option value="receiver">receiver</option>
+                          </>
+                        )}
+                        {field === "delivery_type" && (
+                          <>
+                            <option value="Payable">Payable</option>
+                            <option value="Free">Free</option>
+                          </>
+                        )}
+                      </select>
+                    ) : field === "item_description" || field === "full_address" ? (
+                      <textarea 
+                        name={field} // Added name for autofill
+                        autoComplete={getAutocomplete(field)} // Added autocomplete
+                        value={value} 
+                        onChange={(e) => handleNewDeliveryChange(field, e.target.value)} 
+                      />
+                    ) : (
+                      <input
+                        name={field} // Added name for autofill
+                        autoComplete={getAutocomplete(field)} // Added autocomplete
+                        type={field === "quantity" ? "number" : "text"}
+                        min={field === "quantity" ? 1 : undefined}
+                        value={value}
+                        onChange={(e) => handleNewDeliveryChange(field, e.target.value)}
+                      />
+                    )}
+                  </label>
+                );
+              })}
 
             <div className="modal-actions">
               <button
