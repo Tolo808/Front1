@@ -672,67 +672,94 @@ const handleNotifyDriver = async (deliveryId, driverId) => {
       {addModalOpen && (
         <div className="modal-overlay" ref={modalOverlayRef} onMouseDown={onOverlayClick}>
           <div className="modal-card large" onMouseDown={(e) => e.stopPropagation()}>
-            <h3>Add Delivery</h3>
-            <div className="form-grid">
-             {/* Replace the existing map inside the Add Delivery Modal with this */}
-              {Object.entries(newDelivery).map(([field, value]) => (
-                <label key={field} className={field === "full_address" || field === "item_description" ? "full" : ""}>
-                  {field.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-                  {field === "source" || field === "payment_from_sender_or_receiver" || field === "delivery_type" ? (
-                    <select value={value} onChange={(e) => handleNewDeliveryChange(field, e.target.value)}>
-                      {field === "source" && (
-                        <>
-                          <option value="web">web</option>
-                          <option value="bot">bot</option>
-                          <option value="unknown">unknown</option>
-                        </>
+            <h3>Add New Delivery</h3>
+            
+            {/* 1. Wrapped in a form for browser recognition */}
+            <form onSubmit={(e) => { e.preventDefault(); submitNewDelivery(); }}>
+              <div className="form-grid">
+                {Object.entries(newDelivery).map(([field, value]) => {
+                  
+                  // 2. Map fields to standard browser autocomplete tokens
+                  const getAutoToken = (f) => {
+                    if (f.includes("phone")) return "tel";
+                    if (f === "pickup" || f === "dropoff" || f === "full_address") return "shipping street-address";
+                    if (f === "username") return "name";
+                    return "on";
+                  };
+      
+                  return (
+                    <label key={field} className={field === "full_address" || field === "item_description" ? "full" : ""}>
+                      {field.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                      
+                      {field === "source" || field === "payment_from_sender_or_receiver" || field === "delivery_type" ? (
+                        <select 
+                          name={field}
+                          value={value} 
+                          onChange={(e) => handleNewDeliveryChange(field, e.target.value)}
+                        >
+                          {field === "source" && (
+                            <>
+                              <option value="web">web</option>
+                              <option value="bot">bot</option>
+                              <option value="unknown">unknown</option>
+                            </>
+                          )}
+                          {field === "payment_from_sender_or_receiver" && (
+                            <>
+                              <option value="sender">sender</option>
+                              <option value="receiver">receiver</option>
+                            </>
+                          )}
+                          {field === "delivery_type" && (
+                            <>
+                              <option value="Payable">Payable</option>
+                              <option value="Free">Free</option>
+                            </>
+                          )}
+                        </select>
+                      ) : field === "item_description" || field === "full_address" ? (
+                        <textarea 
+                          name={field} 
+                          autoComplete={getAutoToken(field)}
+                          value={value} 
+                          onChange={(e) => handleNewDeliveryChange(field, e.target.value)} 
+                        />
+                      ) : (
+                        <input
+                          name={field} // Crucial for Autofill
+                          autoComplete={getAutoToken(field)} // Crucial for Autofill
+                          type={field === "quantity" ? "number" : "text"}
+                          min={field === "quantity" ? 1 : undefined}
+                          value={value}
+                          onChange={(e) => handleNewDeliveryChange(field, e.target.value)}
+                        />
                       )}
-                      {field === "payment_from_sender_or_receiver" && (
-                        <>
-                          <option value="sender">sender</option>
-                          <option value="receiver">receiver</option>
-                        </>
-                      )}
-                      {field === "delivery_type" && (
-                        <>
-                          <option value="Payable">Payable</option>
-                          <option value="Free">Free</option>
-                        </>
-                      )}
-                    </select>
-                  ) : field === "item_description" || field === "full_address" ? (
-                    <textarea value={value} onChange={(e) => handleNewDeliveryChange(field, e.target.value)} />
-                  ) : (
-                    <input
-                      type={field === "quantity" ? "number" : "text"}
-                      min={field === "quantity" ? 1 : undefined}
-                      value={value}
-                      onChange={(e) => handleNewDeliveryChange(field, e.target.value)}
-                    />
-                  )}
-                </label>
-              ))}
-            </div>
-
-            <div className="modal-actions">
-              <button
-              onClick={submitNewDelivery}
-              className="btn primary"
-              disabled={
-                !newDelivery.pickup.trim() ||
-                !newDelivery.dropoff.trim() ||
-                !newDelivery.sender_phone.trim() ||
-                !newDelivery.receiver_phone.trim() ||
-                !newDelivery.quantity
-              }
-            >
-              Add Delivery
-            </button>
-
-              <button onClick={closeAddModal} className="btn">
-                Cancel
-              </button>
-            </div>
+                    </label>
+                  );
+                })}
+              </div>
+      
+              <div className="modal-actions">
+                {/* 3. Button type="submit" triggers the form submission */}
+                <button
+                  type="submit"
+                  className="btn primary"
+                  disabled={
+                    !newDelivery.pickup.trim() ||
+                    !newDelivery.dropoff.trim() ||
+                    !newDelivery.sender_phone.trim() ||
+                    !newDelivery.receiver_phone.trim() ||
+                    !newDelivery.quantity
+                  }
+                >
+                  Add Delivery
+                </button>
+      
+                <button type="button" onClick={closeAddModal} className="btn">
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
