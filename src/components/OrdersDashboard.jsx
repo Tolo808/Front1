@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [drivers, setDrivers] = useState([]);
   const [activeTab, setActiveTab] = useState("Pending");
   const [rowLoading, setRowLoading] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
   const [unsuccessfulModal, setUnsuccessfulModal] = useState({
     open: false,
     orderId: null,
@@ -123,14 +124,28 @@ export default function Dashboard() {
 
   // --- Filtered & paginated orders
   const filtered = useMemo(() => {
-    return orders.filter((o) => {
-      const st = (o.status || "").toLowerCase();
-      if (activeTab === "Pending") return st === "pending" || !o.status;
-      if (activeTab === "Successful") return st === "successful";
-      if (activeTab === "Unsuccessful") return st === "unsuccessful";
-      return true;
-    });
-  }, [orders, activeTab]);
+  return orders.filter((o) => {
+    // 1. Filter by Tab (Status)
+    const st = (o.status || "").toLowerCase();
+    let matchesTab = true;
+    if (activeTab === "Pending") matchesTab = st === "pending" || !o.status;
+    else if (activeTab === "Successful") matchesTab = st === "successful";
+    else if (activeTab === "Unsuccessful") matchesTab = st === "unsuccessful";
+
+    // 2. Filter by Driver Name (Search)
+    const assignedDriverName =
+      o.assigned_driver_name ||
+      (o.assigned_driver_id &&
+        drivers.find((d) => String(d._id) === String(o.assigned_driver_id))?.name) ||
+      "";
+
+    const matchesSearch = assignedDriverName
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    return matchesTab && matchesSearch;
+  });
+}, [orders, activeTab, searchTerm, drivers]); // Ensure searchTerm and drivers are in the dependency array
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ORDERS_PER_PAGE));
   const paginated = filtered.slice(
@@ -404,7 +419,18 @@ const handleNotifyDriver = async (deliveryId, driverId) => {
               </button>
             ))}
           </div>
-
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="🔍 Search driver name..."
+              className="search-input"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1); // Reset to page 1 when searching
+              }}
+            />
+          </div>
           <div className="add-delivery">
             <button className="btn primary" onClick={openAddModal}>
               + Add Delivery
