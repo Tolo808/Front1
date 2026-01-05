@@ -6,7 +6,7 @@ const API_URL = "https://backend-production-4394.up.railway.app/api/drivers";
 
 export default function AdminPanel() {
   const [drivers, setDrivers] = useState([]);
-  const [formData, setFormData] = useState({ name: "", phone: "", vehicle: "" });
+  const [formData, setFormData] = useState({ name: "", phone: "", vehicle_plate: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
@@ -20,10 +20,10 @@ export default function AdminPanel() {
   const openModal = (driver = null) => {
     if (driver) {
       setEditingId(driver._id);
-      setFormData({ name: driver.name, phone: driver.phone, vehicle: driver.vehicle });
+      setFormData({ name: driver.name, phone: driver.phone, vehicle: driver.vehicle_plate });
     } else {
       setEditingId(null);
-      setFormData({ name: "", phone: "", vehicle: "" });
+      setFormData({ name: "", phone: "", vehicle_plate: "" });
     }
     setIsModalOpen(true);
   };
@@ -31,7 +31,7 @@ export default function AdminPanel() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingId(null);
-    setFormData({ name: "", phone: "", vehicle: "" });
+    setFormData({ name: "", phone: "", vehicle_plate: "" });
   };
 
   const handleSubmit = async (e) => {
@@ -87,7 +87,7 @@ export default function AdminPanel() {
                 <tr key={d._id}>
                   <td>{d.name}</td>
                   <td>{d.phone}</td>
-                  <td>{d.vehicle}</td>
+                  <td>{d.vehicle_plate}</td>
                   <td>
                     <button onClick={() => openModal(d)} className="edit-btn">Edit</button>
                     <button onClick={() => deleteDriver(d._id)} className="del-btn">Delete</button>
@@ -115,7 +115,7 @@ export default function AdminPanel() {
               />
               <input 
                 type="text" placeholder="Vehicle" 
-                value={formData.vehicle} onChange={(e) => setFormData({...formData, vehicle: e.target.value})} 
+                value={formData.vehicle_plate} onChange={(e) => setFormData({...formData, vehicle: e.target.value})} 
               />
               <div className="modal-actions">
                 <button type="submit" className="add-btn">
