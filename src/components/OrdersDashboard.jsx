@@ -352,11 +352,14 @@ const handleDriverAssign = async (orderId, driverId) => {
 
 
 const handleNotifyDriver = async (deliveryId, driverId) => {
-  // 1. Remove the trailing slash from the base URL
-  const API_URL = "https://backend-production-4394.up.railway.app";
+  if (!deliveryId || !driverId) return alert("Select a driver first!");
+
+  // 1. Show 'Sending...' on the button
+  setNotifyingIds((prev) => [...prev, deliveryId]);
 
   try {
-    // 2. Use the correct endpoint: /api/internal/notify_driver
+    const API_URL = "https://driverappserver-production.up.railway.app";
+
     const response = await fetch(`${API_URL}/api/internal/notify_driver`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -366,25 +369,19 @@ const handleNotifyDriver = async (deliveryId, driverId) => {
       }),
     });
 
-    // 3. Check if response is actually JSON before parsing
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      const text = await response.text();
-      console.error("Expected JSON but got:", text);
-      throw new Error("Server did not return JSON. Check if the URL is correct.");
-    }
-
     const data = await response.json();
     
     if (data.success) {
-      alert("✅ Notification sent to Python Backend!");
+      alert("✅ Driver notified successfully!");
     } else {
-      // Use data.message because that's what your Flask app sends
-      alert("⚠️ Server error: " + (data.message || "Unknown error"));
+      alert("⚠️ Error: " + (data.message || "Could not reach driver"));
     }
   } catch (err) {
-    console.error("❌ Failed to notify app", err);
-    alert("Error: " + err.message);
+    console.error("❌ Failed to notify", err);
+    alert("Check your internet or backend URL");
+  } finally {
+    // 2. Remove 'Sending...' status
+    setNotifyingIds((prev) => prev.filter(id => id !== deliveryId));
   }
 };
 
